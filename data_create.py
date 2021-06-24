@@ -3,28 +3,27 @@ import random
 import glob
 
 
-# 任意のフレーム数を切り出すプログラム
 class DataCreate:
     def __init__(self):
         self.num = 0
         self.mag = 2
 
-    # 任意のフレーム数を切り出すプログラム
     def data_create(self,
-                    img_path,  # 切り取る動画が入ったファイルのpath
-                    data_number,  # データセットの生成数
-                    cut_frame,  # 1枚の画像から生成するデータセットの数
-                    hr_height,  # HRの保存サイズ
+                    img_path,  # Path of the file containing the images to be cut
+                    data_number,  # Number of datasets generated
+                    cut_frame,  # Number of datasets generated from one image
+                    hr_height,  # Size of high resolution image
                     hr_width):
 
-        lr_height = hr_height  # 低解像度画像のsize = 高解像度のsize
+        lr_height = hr_height
         lr_width = hr_width
 
-        low_data_list = []  # 生成したデータを格納するListの作成
+        # declare the data list to store the color spaces
+        low_data_list = []
         high_data_list = []
-        low_data_list_cb = []  # 生成したデータを格納するListの作成
+        low_data_list_cb = []
         high_data_list_cb = []
-        low_data_list_cr = []  # 生成したデータを格納するListの作成
+        low_data_list_cr = []
         high_data_list_cr = []
         path = img_path + "/*"
         files = glob.glob(path)
@@ -37,6 +36,7 @@ class DataCreate:
             if hr_height > height or hr_width > width:
                 break
 
+            # Get the color spaces
             color_img = cv2.cvtColor(img, cv2.COLOR_BGR2YCrCb)
             gray = color_img[:, :, 0]
             cr = color_img[:, :, 1]
@@ -53,6 +53,7 @@ class DataCreate:
                                         interpolation=cv2.INTER_CUBIC)
             bicubic_img_cb = cv2.resize(bicubic_img_cb, (int(width), int(height)), interpolation=cv2.INTER_CUBIC)
 
+            # Create all the color spaces databases
             for i in range(cut_frame):
                 ram_h = random.randint(0, height - lr_height)
                 ram_w = random.randint(0, width - lr_width)

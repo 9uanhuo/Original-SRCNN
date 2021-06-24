@@ -100,16 +100,13 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    if args.mode == 'train_data_create':  # 学習用データセットの生成
+    # Generation of training dataset
+    if args.mode == 'train_data_create':
         create_data = data_create.DataCreate()
         train_x, train_y, t_x_cr, t_y_cr, t_x_cb, t_y_cb = create_data.data_create(args.train_path,
-                                                                                   # 切り取る動画のpath
                                                                                    args.train_dataset_num,
-                                                                                   # データセットの生成数
                                                                                    args.train_cut_num,
-                                                                                   # 1枚の画像から生成するデータの数
                                                                                    args.train_height,
-                                                                                   # 保存サイズ
                                                                                    args.train_width)
         path = "train_data_list"
         path_cr = "train_data_list_cr"
@@ -118,7 +115,8 @@ if __name__ == "__main__":
         np.savez(path_cr, t_x_cr, t_y_cr)
         np.savez(path_cb, t_x_cb, t_y_cb)
 
-    elif args.mode == 'test_data_create':  # 評価用データセットの生成
+    # Generation of evaluation data set
+    elif args.mode == 'test_data_create':
         create_data = data_create.DataCreate()
         test_x, test_y, e_x_cr, e_y_cr, e_x_cb, e_y_cb = create_data.data_create(args.test_path,
                                                                                  args.test_dataset_num,
@@ -133,7 +131,7 @@ if __name__ == "__main__":
         np.savez(path_cr, e_x_cr, e_y_cr)
         np.savez(path_cb, e_x_cb, e_y_cb)
 
-    elif args.mode == "train_model":  # 学習
+    elif args.mode == "train_model":
         check_gpu()
         npz = np.load("train_data_list.npz")
         train_x = npz["arr_0"]
@@ -160,7 +158,7 @@ if __name__ == "__main__":
 
         train_model.save("SRCNN_model.h5")
 
-    elif args.mode == "evaluate":  # 評価
+    elif args.mode == "evaluate":
         check_gpu()
 
         result_path = "result"
@@ -204,15 +202,19 @@ if __name__ == "__main__":
                 ps_bicubic = psnr(tf.reshape(test_y[p], [args.test_height, args.test_width, 1]),
                                   tf.reshape(test_x[p], [args.test_height, args.test_width, 1]))
 
+                # low resolution
                 low_dest = output_img(test_x, test_x_cr, test_x_cb)
-                cv2.imwrite(result_path + "/" + str(p) + "_low" + ".jpg", low_dest)  # LR
+                cv2.imwrite(result_path + "/" + str(p) + "_low" + ".jpg", low_dest)
 
+                # high resolution
                 high_dest = output_img(test_y, test_y_cr, test_y_cb)
-                cv2.imwrite(result_path + "/" + str(p) + "_high" + ".jpg", high_dest)  # HR
+                cv2.imwrite(result_path + "/" + str(p) + "_high" + ".jpg", high_dest)  
 
+                # pred
                 pred_dest = output_img(pred, test_x_cr, test_x_cb)
-                cv2.imwrite(result_path + "/" + str(p) + "_pred" + ".jpg", pred_dest)  # pred
+                cv2.imwrite(result_path + "/" + str(p) + "_pred" + ".jpg", pred_dest)
 
+                # evaluate
                 ss_pred = calculate_ssim(pred_dest, high_dest)
                 ss_bicubic = calculate_ssim(low_dest, high_dest)
 
