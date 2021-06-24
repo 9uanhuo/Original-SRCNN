@@ -69,6 +69,9 @@ def calculate_ssim(img1, img2):
         raise ValueError('Wrong input image dimensions.')
 
 
+def psnr(y_true, y_pred):
+    return tf.image.psnr(y_true, y_pred, 1, name=None)
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Tensorflow SRCNN Example')
 
@@ -90,14 +93,8 @@ if __name__ == "__main__":
     parser.add_argument('--BATCH_SIZE', type=int, default=32, help="Training batch size")
     parser.add_argument('--EPOCHS', type=int, default=300, help="Number of epochs to train for")
 
-
-    def psnr(y_true, y_pred):
-        return tf.image.psnr(y_true, y_pred, 1, name=None)
-
-
     parser.add_argument('--mode', type=str, default='train_model',
                         help='train_data_create, test_data_create, train_model, evaluate')
-
     args = parser.parse_args()
 
     # Generation of training dataset
