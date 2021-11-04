@@ -4,7 +4,7 @@ A modified version of morimoris's SRCNN implement based on the paper called *Ima
 
 ## Overview
 
-Now the program can output colorful images, but that's not mean this program can really process the color part of input images. In fact, I just keep the `Cr` and `Cb` color spaces and add them to the output images which only have `Y` color space to make them colorful. So, there is no essential difference between this program and the original one about the process of color spaces.
+Now the program can output colorful images, but that don't mean this program can really process the color part of input images. In fact, I just keep the `Cr` and `Cb` color spaces and add them to the output images which only have `Y` color space to make them colorful. So, there is no essential difference between this program and the original one about the process of color spaces.
 
 The processing effect is roughly as shown in the figure:
 
@@ -25,7 +25,7 @@ About the evaluation, SSIM is included now.
 
 The detail info about all the args are shown below. You can use the default value or use specified value. Please use `--mode` to specify a certain mode instead of using default `train_model` mode.
 Generally speaking, the order in which the patterns are used is `train_data_create`, `test_data_create`, `train_model`, `evaluate`.
-The code logic is pretty simple. If you have any confusion, you could check the code for details, or check the original author’s blog. Also a issue is welcomed :)
+The code logic is pretty simple. If you have any confusion, you could check the code for details, or check the original author’s blog. Also an issue is welcomed :)
 
 ``` plaintext
 usage: main.py [-h] [--train_height TRAIN_HEIGHT] [--train_width TRAIN_WIDTH] [--test_height TEST_HEIGHT]
